@@ -7,6 +7,8 @@ interface PromaButtonProps {
   onClick?: () => void;
   className?: string;
   icon?: React.ReactNode;
+  disabled?: boolean;
+  loading?: boolean;
 }
 
 export function PromaButton({
@@ -16,6 +18,8 @@ export function PromaButton({
   onClick,
   className = "",
   icon,
+  disabled = false,
+  loading = false,
 }: PromaButtonProps) {
   const baseStyles =
     "inline-flex items-center gap-3 transition-all duration-200 cursor-pointer relative overflow-hidden";
@@ -37,10 +41,11 @@ export function PromaButton({
 
   return (
     <motion.button
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
+      whileHover={disabled || loading ? {} : { scale: 1.03 }}
+      whileTap={disabled || loading ? {} : { scale: 0.97 }}
       onClick={onClick}
-      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      disabled={disabled || loading}
+      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className} ${disabled || loading ? 'opacity-70 cursor-not-allowed' : ''}`}
       style={{
         fontFamily: "var(--proma-sans)",
         fontWeight: 600,
@@ -48,8 +53,8 @@ export function PromaButton({
         letterSpacing: "0.01em",
       }}
     >
-      {children}
-      {icon && <span className="flex-shrink-0">{icon}</span>}
+      {loading ? "Enviando..." : children}
+      {icon && !loading && <span className="flex-shrink-0">{icon}</span>}
     </motion.button>
   );
 }

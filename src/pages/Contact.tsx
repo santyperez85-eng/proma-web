@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { ArrowRight, Send, Calendar, Mail, MapPin } from "lucide-react";
 import { PromaButton } from "../components/PromaButton";
 import { ProcessStep } from "../components/ProcessStep";
+import { supabase } from "../lib/supabase";
 
 interface ContactProps {
   onNavigate: (page: string) => void;
@@ -18,10 +19,34 @@ export function Contact({ onNavigate }: ContactProps) {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setErrorMsg("");
+
+    try {
+      const { error } = await supabase.from('leads').insert([
+        {
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          service: formData.service,
+          budget: formData.budget,
+          message: formData.message,
+        }
+      ]);
+
+      if (error) throw error;
+      setSubmitted(true);
+    } catch (error: any) {
+      console.error('Error submitting form:', error);
+      setErrorMsg(error.message || "Ocurrió un error al enviar tu mensaje. Por favor, intentá nuevamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputStyles: React.CSSProperties = {
@@ -206,9 +231,16 @@ export function Contact({ onNavigate }: ContactProps) {
                   <span className="text-[var(--proma-text-tertiary)]" style={{ fontSize: "0.75rem" }}>
                     * campos requeridos
                   </span>
-                  <PromaButton variant="primary" size="lg" icon={<Send size={16} />}>
-                    Enviar brief
-                  </PromaButton>
+                  <div className="flex items-center gap-4">
+                    {errorMsg && (
+                      <span className="text-[var(--proma-accent)]" style={{ fontSize: "0.85rem", maxWidth: "250px", textAlign: "right" }}>
+                        {errorMsg}
+                      </span>
+                    )}
+                    <PromaButton variant="primary" size="lg" icon={<Send size={16} />} disabled={loading} loading={loading}>
+                      Enviar brief
+                    </PromaButton>
+                  </div>
                 </div>
               </motion.form>
             ) : (
