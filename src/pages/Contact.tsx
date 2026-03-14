@@ -30,12 +30,12 @@ export function Contact({ onNavigate }: ContactProps) {
     try {
       const { error } = await supabase.from('leads').insert([
         {
-          name: formData.name,
+          nombre: formData.name,
           email: formData.email,
-          company: formData.company,
-          service: formData.service,
-          budget: formData.budget,
-          message: formData.message,
+          empresa: formData.company,
+          servicio: formData.service,
+          presupuesto: formData.budget,
+          mensaje: formData.message,
         }
       ]);
 
