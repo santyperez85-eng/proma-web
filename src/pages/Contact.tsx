@@ -245,30 +245,21 @@ export function Contact({ onNavigate }: ContactProps) {
               </motion.form>
             ) : (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="p-12 text-center"
-                style={{
-                  border: "1px solid var(--proma-accent)",
-                  background: "var(--proma-accent-dim)",
-                  borderRadius: "var(--proma-radius-card)",
-                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6 }}
+                className="flex items-center justify-center h-full min-h-[400px]"
               >
-                <div
-                  className="w-14 h-14 flex items-center justify-center mx-auto mb-5"
-                  style={{ background: "var(--proma-accent)", borderRadius: "50%" }}
-                >
-                  <Send size={20} className="text-[var(--proma-bg)]" />
-                </div>
                 <h3
-                  className="text-[var(--proma-text-primary)] mb-3"
-                  style={{ fontFamily: "var(--proma-display)", fontSize: "1.4rem", fontWeight: 700 }}
+                  className="text-[var(--proma-text-primary)] text-center text-xl md:text-2xl"
+                  style={{
+                    fontFamily: "var(--proma-sans)",
+                    fontWeight: 400,
+                    lineHeight: 1.5,
+                  }}
                 >
-                  Brief recibido
+                  Brief recibido con éxito.<br />Nos contactaremos a la brevedad.
                 </h3>
-                <p className="text-[var(--proma-text-secondary)] text-sm">
-                  Te respondemos en máximo 48 horas hábiles con una evaluación inicial.
-                </p>
               </motion.div>
             )}
           </div>
